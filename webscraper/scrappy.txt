@@ -1,0 +1,6 @@
+Observaties:
+- Redelijk goed als Webscraper
+- Maar het gebruik is zeer gericht via CLI.
+- Deployment is ook gericht op hun eigen cloud oplossing
+- Minder makkelijk om het zelf ergens te hosten.
+- Werkt minder makkelijk met andere scripts, omdat Twisted package een obstakel is.

@@ -1,0 +1,8 @@
+selenium
+playwright
+polars
+sqlalchemy
+psycopg2-binary
+scrapy
+crochet
+fastapi
