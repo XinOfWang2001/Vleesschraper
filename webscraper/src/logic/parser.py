@@ -32,10 +32,17 @@ class AlbertMenuParser(Parser):
         web_page = self.retriever.scrape_site()
         # Might
         bs4 = BeautifulSoup(web_page.html_content, "html.parser")
-
-        products = bs4.find_all("a", class_=lambda x: x and 'product-card-container_linkContainer' in x)
+        
+        # Eerst find all zoeken
+        products = bs4.find_all("div", class_="product-card-container_horizontalContainer__Olj6l")
+        # Start mapping product information to entity file.
         for product in products:
-            print(product)
+            # Dan find methode gebruiken
+            # Seems like a working solution. Now to make it more robust and compatible with Blazor
+            title = product.find("p", class_= "typography_typography__1WfcP")
+            price = product.find("p", class_="product-card-current-price_root__7_1ri")
+            print(title.text)
+            print(price.text)
 
         # Decide if the implementation needs to be split to specific use cases or not.
         return super().parse()

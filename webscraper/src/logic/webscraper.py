@@ -20,7 +20,7 @@ class WebRetriever:
 
     def scrape_site(self) -> WebPage:
         try:
-            result = httpx.get(self.url, headers=self.headers, verify=True)
+            result = httpx.get(self.url, headers=self.headers, verify=False)
             return WebPage(self.url, datetime.now(), result.text)
         except Exception:
             return WebPage(self.url, datetime.now(), result)
