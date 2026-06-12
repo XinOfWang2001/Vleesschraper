@@ -1,4 +1,5 @@
-from domain.meat_product import MeatProduct
+from ..domain import MeatProduct
+
 
 class DataLoader:
 

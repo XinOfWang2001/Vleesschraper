@@ -2,7 +2,7 @@ from datetime import datetime
 
 import httpx
 
-from domain.web_page import WebPage
+from ..domain import WebPage
 
 # A general scraper logic to isolate the choice of webscraper, Selenium or BeautifulSoup
 

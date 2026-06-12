@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-@dataclass
-class MeatProduct:
+from pydantic import BaseModel
+
+class MeatProduct(BaseModel):
     date_time: datetime
     supermarket: str 
     full_title: str 
