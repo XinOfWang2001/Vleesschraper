@@ -3,3 +3,4 @@ history
 *.sqlite
 __pycache__
 *venv
+*.coverage
