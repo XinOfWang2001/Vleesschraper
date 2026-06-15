@@ -1,0 +1,26 @@
+version: "1.0"
+
+services:
+  db:
+    image: "postgres"
+    shm_size: "200mb"
+    restart: always
+    environment:
+      - POSTGRES_USER=hero
+      - POSTGRES_PASSWORD=localpassword
+    ports:
+      - "1433:1433"
+
+  analytics_db:
+    image: "postgres"
+    shm_size: "300mb"
+    restart: always
+    environment:
+      - POSTGRES_USER=api_hero
+      - POSTGRES_PASSWORD=local_analytics_password
+    ports:
+      - "1434:1433"
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
