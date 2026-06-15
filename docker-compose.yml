@@ -9,7 +9,17 @@ services:
       - POSTGRES_USER=hero
       - POSTGRES_PASSWORD=localpassword
     ports:
-      - "1433:1433"
+      - "50000:5432"
+
+  test_db:
+    image: "postgres"
+    shm_size: "200mb"
+    restart: always
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test_password
+    ports:
+      - "51000:5432"
 
   analytics_db:
     image: "postgres"
@@ -19,7 +29,7 @@ services:
       - POSTGRES_USER=api_hero
       - POSTGRES_PASSWORD=local_analytics_password
     ports:
-      - "1434:1433"
+      - "52000:5432"
   adminer:
     image: adminer
     ports:

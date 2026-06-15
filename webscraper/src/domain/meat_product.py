@@ -11,3 +11,6 @@ class MeatProduct(BaseModel):
     normal_price: float 
     current_price: float 
     weight: int 
+
+    def get_date_code(self):
+        return int(f"{self.date_time.year}{self.date_time.month}{self.date_time.day}{self.date_time.hour}{self.date_time.minute}")
