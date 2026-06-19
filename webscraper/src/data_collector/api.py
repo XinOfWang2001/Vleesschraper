@@ -31,7 +31,6 @@ async def get():
 @app.post("/run")
 async def run_pipeline():
     try:
-
         pipeline = CollectionPipeline(albert_heijn_parser, data_loader)
         answer = pipeline.execute()
         return {"status": 200, "successfull": answer}
