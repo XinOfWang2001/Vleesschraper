@@ -1,37 +1,38 @@
 from ..domain import MeatProduct
 
-from sqlalchemy import URL
-from sqlalchemy import create_engine
+from sqlalchemy import URL, create_engine, event
 
 class DataLoader:
 
     def __init__(self, connection_string: URL):
-        self.engine = create_engine(connection_string)
-
+        self.engine = create_engine(connection_string, pool_reset_on_return=None)
+    
+    # TODO: Clean up tables.
     def load(self, products: list[MeatProduct]):
         try:
             # An insert query of only
             # Start transaction
-            insert_query = """
-            INSERT INTO Stage_Meats (DateCode, Title, Capitalized_Title, Normal_Price, Current_Price, Discount)
-            VALUES (%s, %s, %s, %s, %s, %s)
-            """
-
             mapping = []
+            insert_query = """
+            INSERT INTO Stage_Meats (DateCode, SuperMarket, Title, Capitalized_Title, Normal_Price, Current_Price, Discount, Weight)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """
             temp_table = """
             CREATE TEMPORARY TABLE Stage_Meats (
-                DateCode bigint,
-                Title varchar(255),
-                Capitalized_Title varchar(255),
-                Normal_Price float,
-                Current_Price float,
-                Discount int,
-                PRIMARY KEY (DateCode, Capitalized_Title)
+            DateCode bigint,
+            SuperMarket varchar(100),
+            Title varchar(255),
+            Capitalized_Title varchar(255),
+            Normal_Price float,
+            Current_Price float,
+            Discount int,
+            Weight int,
+            PRIMARY KEY (DateCode, Capitalized_Title)
             )
             """
             insert_filter = """
-            INSERT INTO Meatproduct (DateCode, Title, Capitalized_Title, Normal_Price, Current_Price, Discount) 
-                SELECT sm.DateCode, sm.Title, sm.Capitalized_Title, sm.Normal_Price, sm.Current_Price, sm.Discount
+            INSERT INTO Meatproduct (DateCode, SuperMarket, Title, Capitalized_Title, Normal_Price, Current_Price, Discount, Weight) 
+                SELECT sm.DateCode, sm.SuperMarket, sm.Title, sm.Capitalized_Title, sm.Normal_Price, sm.Current_Price, sm.Discount, sm.Weight
                 FROM Stage_Meats sm
                 WHERE NOT EXISTS (
                     SELECT 1 
@@ -41,7 +42,7 @@ class DataLoader:
                 );
             """
             for meat in products:
-                mapping.append((meat.get_date_code(), meat.full_title, meat.capitilized_title, meat.normal_price, meat.current_price, 0))
+                mapping.append(meat.get_tuple())
             
             with self.engine.begin() as conn:
                 # Create temp table
@@ -50,9 +51,9 @@ class DataLoader:
                     conn.exec_driver_sql(insert_query, record)
                 # Perform JOIN with existing table
                 conn.exec_driver_sql(insert_filter)
+                conn.exec_driver_sql("DISCARD TEMP")
                 # # Close transaction
                 conn.commit()
         except Exception as e:
-            e.with_traceback()
-            print("Something went wrong with the insertion")
+            raise e
             

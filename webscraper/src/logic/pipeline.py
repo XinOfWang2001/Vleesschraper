@@ -3,7 +3,7 @@ from .parser import Parser
 
 class CollectionPipeline:
 
-    def __init__(self, webscraper, loader):
+    def __init__(self, webscraper: Parser, loader: DataLoader):
         self.webscraper: Parser = webscraper
         self.data_loader: DataLoader = loader
         
@@ -12,8 +12,7 @@ class CollectionPipeline:
             data = self.webscraper.parse()
             self.data_loader.load(data)
             return True
-        except Exception:
-            print("Failed data collection")
-            return False
+        except Exception as ex:
+            raise ex
         
         

@@ -12,22 +12,28 @@ load_dotenv()
 
 connection_string_collect= URL.create(
     drivername=os.environ.get("DRIVER"),
-    username=os.environ.get("COLLECT_USER_NAME"),
-    password=os.environ.get("COLLECT_PASSWORD"),
-    host=os.environ.get("COLLECT_HOST"),
-    database=os.environ.get("COLLECT_DATABASE")
+    username=os.environ.get("USER_NAME"),
+    password=os.environ.get("PASSWORD"),
+    host=os.environ.get("HOST"),
+    port=os.environ.get("PORT"),
+    database=os.environ.get("DATABASE")
 )
+print(connection_string_collect)
 web = WebRetriever(AH_URL)
-albert_heijn = AlbertMenuParser(web)
+albert_heijn_parser = AlbertMenuParser(web)
 data_loader = DataLoader(connection_string_collect)
 app = FastAPI()
 
 @app.get("/")
 async def get():
-    return albert_heijn.parse()
+    return albert_heijn_parser.parse()
 
 @app.post("/run")
 async def run_pipeline():
-    pipeline = CollectionPipeline(web, data_loader)
-    answer = pipeline.execute()
-    return {"status": 200, "successfull": answer}
+    try:
+
+        pipeline = CollectionPipeline(albert_heijn_parser, data_loader)
+        answer = pipeline.execute()
+        return {"status": 200, "successfull": answer}
+    except Exception as exc:
+        return {"status": 500, "message": exc.args}
