@@ -24,6 +24,11 @@ albert_heijn_parser = AlbertMenuParser(web)
 data_loader = DataLoader(connection_string_collect)
 app = FastAPI()
 
+# TODO: HOW to deploy them.
+# Serverless?
+# CronJob?
+# API?
+
 @app.get("/")
 async def get():
     return albert_heijn_parser.parse()

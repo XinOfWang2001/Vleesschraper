@@ -4,7 +4,9 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from sqlalchemy import URL
 # Just for the sake of testing
-from src.logic import DataLoader
+from src.logic import DataLoader, WebPage
+
+load_dotenv()
 
 app = FastAPI()
 
