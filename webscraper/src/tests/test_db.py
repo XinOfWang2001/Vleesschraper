@@ -6,6 +6,18 @@ from src.domain import MeatProduct
 from src.logic import DataLoader
 
 class TestDBConnection(ut.TestCase):
+
+    def __init__(self, methodName = "runTest"):
+        self.connection_string_collect= URL.create(
+            drivername="postgresql+psycopg2",
+            username="test",
+            password="test_password",
+            host="127.0.0.1",
+            port=51000,
+            database="test"
+            )
+        self.engine = create_engine(self.connection_string_collect)
+        super().__init__(methodName)
     
     # def test_retrieval(self):
     #     connection_string_collect= URL.create(
@@ -26,20 +38,11 @@ class TestDBConnection(ut.TestCase):
     #         self.assertEqual(50, len(rows))
     
     def test_insertion_3_new_entities(self):
-        connection_string_collect= URL.create(
-            drivername="postgresql+psycopg2",
-            username="test",
-            password="test_password",
-            host="127.0.0.1",
-            port=51000,
-            database="test"
-            )
-        engine = create_engine(connection_string_collect)
         sql = ""
         with open("src/data/db/create_meat_table.sql") as file:
             sql = file.read()
         # Create tables
-        with engine.connect() as conn:
+        with self.engine.connect() as conn:
             conn.execute(text(sql))
             conn.commit()
 
@@ -48,6 +51,9 @@ class TestDBConnection(ut.TestCase):
         entity3 = MeatProduct(date_time=datetime(2001, 1, 1, 13, 45), supermarket="AH", full_title="test3", capitilized_title="TEST3", normal_price=3.0, current_price=3.0, weight=200)
         entity4 = MeatProduct(date_time=datetime(2001, 1, 2, 13, 45), supermarket="AH", full_title="test3", capitilized_title="TEST3", normal_price=3.0, current_price=3.0, weight=200)
         bulk = [entity1, entity2, entity3,entity4]
-        loader = DataLoader(connection_string_collect)
+        loader = DataLoader(self.connection_string_collect)
         # Act
         loader.load(bulk)
+
+        # Validate
+        

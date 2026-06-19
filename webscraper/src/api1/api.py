@@ -7,17 +7,15 @@ from src.logic import (AlbertMenuParser, CollectionPipeline, DataLoader,
                        WebRetriever)
 
 AH_URL = "https://www.ah.nl/producten/9344/vlees"
-URL_INTERNAL = ""
 
 load_dotenv()
 
-print(f"=== Connection ==: {os.environ.get("COLLECT_DB_ALCHEMY")}")
 connection_string_collect= URL.create(
-    drivername="postgresql",
-    username="hero",
-    password="localpassword",
-    host="localhost",
-    database="hero"
+    drivername=os.environ.get("DRIVER"),
+    username=os.environ.get("COLLECT_USER_NAME"),
+    password=os.environ.get("COLLECT_PASSWORD"),
+    host=os.environ.get("COLLECT_HOST"),
+    database=os.environ.get("COLLECT_DATABASE")
 )
 web = WebRetriever(AH_URL)
 albert_heijn = AlbertMenuParser(web)
