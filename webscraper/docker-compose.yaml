@@ -1,0 +1,14 @@
+version: "0.2"
+name: "vlees_schraper_proto"
+
+services:
+  data_collector:
+    shm_size: "1gb"
+    build:
+      context: .
+      dockerfile: "data_collector/Dockerfile"
+    image: data-collector-app
+    environment:
+      - Hond="Honden zijn beter dan katten"
+    ports:
+      - "10000:80"
