@@ -27,6 +27,10 @@ data_loader = DataLoader(connection_string_collect)
 app = FastAPI()
 
 # Solution scheduled tasks.
+
+# AWS ECS Tasks
+# Google Cloud Tasks
+
 @app.put("/run-pipeline")
 async def run_pipeline():
     try:
