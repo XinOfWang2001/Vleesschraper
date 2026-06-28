@@ -6,3 +6,4 @@ fastapi
 uvicorn
 dotenv
 beautifulsoup4
+boto3

@@ -28,8 +28,17 @@ app = FastAPI()
 
 # Solution scheduled tasks.
 
-# AWS ECS Tasks
-# Google Cloud Tasks
+# Data collector
+# - AWS ECS Tasks -> https://aws.amazon.com/ecs/?nc2=h_prod_cp_ecs&trk=ft_ec2
+# - Google Cloud Tasks
+
+# Data Synchronisizer & API
+# - AWS CS2
+# - Google Cloud compute
+
+# SQL-Database
+# - Azure SQL-Server -> https://azure.microsoft.com/en-us/pricing/free-services#Free-service-types
+# - AWS Aurora RDS -> https://aws.amazon.com/rds/aurora/?refid=ft_ec2
 
 @app.put("/run-pipeline")
 async def run_pipeline():
