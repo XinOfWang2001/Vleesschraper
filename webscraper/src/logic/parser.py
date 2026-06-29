@@ -42,11 +42,16 @@ class AlbertMenuParser(Parser):
         if(len(elements) == 0):
             return collection
         product = elements.pop()
+        condition =  lambda text: "typography_typography" in text
+        current_price_condition =  lambda text: "product-card-current-price_root" in text
+        original_price_condition =  lambda text: "original-price_root" in text
+        product_weight_condition =  lambda text: "product-card-content_priceDescription" in text
         # Searches information within markup.
-        title: str = product.find("p", class_="typography_typography__1WfcP").get_text(strip=True)
-        current_price: str = product.find("p", class_="product-card-current-price_root__7_1ri").get_text()
-        old_price = product.find("p", class_="original-price_root__UfAbO")
-        weight: str = product.find("p", class_="product-card-content_priceDescription__WyJ1D").get_text(separator=" ", strip=True)
+        title: str = product.find("p", class_=condition).get_text(strip=True)
+        
+        current_price: str = product.find("p", class_=current_price_condition).get_text()
+        old_price = product.find("p", class_=original_price_condition)
+        weight: str = product.find("p", class_=product_weight_condition).get_text(separator=" ", strip=True)
         # Specific logic to parse the information is necessary for discount checking or weights parsing.
         old_price = self._parse_discounts(old_price, current_price)
         weight_float: int = self._parse_weight(weight)
@@ -64,6 +69,9 @@ class AlbertMenuParser(Parser):
             # Assign regular price if no discount is applied
             return old.get_text()
         return current
+    
+    def _partial_match(self, condition, text) -> str:
+        return condition in text
     
     def _parse_weight(self, weight: str) -> int:
         weight = weight.replace("ca. ", "")

@@ -14,12 +14,13 @@ class DataLoader:
             # Start transaction
             mapping = []
             insert_query = """
-            INSERT INTO Stage_Meats (DateCode, SuperMarket, Title, Capitalized_Title, Normal_Price, Current_Price, Discount, Weight)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO Stage_Meats (DateCode, Date, SuperMarket, Title, Capitalized_Title, Normal_Price, Current_Price, Discount, Weight)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
             temp_table = """
             CREATE TEMPORARY TABLE Stage_Meats (
             DateCode bigint,
+            Date TIMESTAMP,
             SuperMarket varchar(100),
             Title varchar(255),
             Capitalized_Title varchar(255),
@@ -31,8 +32,8 @@ class DataLoader:
             )
             """
             insert_filter = """
-            INSERT INTO Meatproduct (DateCode, SuperMarket, Title, Capitalized_Title, Normal_Price, Current_Price, Discount, Weight) 
-                SELECT sm.DateCode, sm.SuperMarket, sm.Title, sm.Capitalized_Title, sm.Normal_Price, sm.Current_Price, sm.Discount, sm.Weight
+            INSERT INTO Meatproduct (DateCode, Date, SuperMarket, Title, Capitalized_Title, Normal_Price, Current_Price, Discount, Weight) 
+                SELECT sm.DateCode, sm.Date, sm.SuperMarket, sm.Title, sm.Capitalized_Title, sm.Normal_Price, sm.Current_Price, sm.Discount, sm.Weight
                 FROM Stage_Meats sm
                 WHERE NOT EXISTS (
                     SELECT 1 

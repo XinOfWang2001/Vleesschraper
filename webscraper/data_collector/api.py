@@ -47,6 +47,7 @@ async def run_pipeline():
         answer = pipeline.execute()
         return {"status": 200, "successfull": answer}
     except Exception as exc:
+        exc.with_traceback()
         return {"status": 500, "message": exc.args}
     
 @app.get("/health")

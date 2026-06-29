@@ -1,5 +1,6 @@
 CREATE TEMPORARY TABLE Stage_Meats (
     DateCode bigint,
+    Date TIMESTAMP,
     SuperMarket varchar(100),
     Title varchar(255),
     Capitalized_Title varchar(255),

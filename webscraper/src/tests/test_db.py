@@ -56,4 +56,6 @@ class TestDBConnection(ut.TestCase):
         loader.load(bulk)
 
         # Validate
-        
+
+if __name__ == "main":
+    ut.main()

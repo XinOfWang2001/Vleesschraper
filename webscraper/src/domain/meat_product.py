@@ -21,6 +21,7 @@ class MeatProduct(BaseModel):
     def get_tuple(self):
         return (
             self.get_date_code(), 
+            self.date_time,
             self.supermarket, 
             self.full_title, 
             self.get_unique_name(), 
