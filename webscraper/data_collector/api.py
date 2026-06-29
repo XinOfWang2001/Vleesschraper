@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from sqlalchemy import URL
 from src.logic import (AlbertMenuParser, CollectionPipeline, DataLoader,
                        WebRetriever)
+from mangum import Mangum
 
 AH_URL = "https://www.ah.nl/producten/9344/vlees"
 
@@ -29,6 +30,7 @@ app = FastAPI()
 # Solution scheduled tasks.
 
 # Data collector
+# - Lambdas --> Eerste optie
 # - AWS ECS Tasks -> https://aws.amazon.com/ecs/?nc2=h_prod_cp_ecs&trk=ft_ec2
 # - Google Cloud Tasks
 
@@ -55,4 +57,5 @@ async def health():
     return {"status": 200, "health": os.environ.get("Hond", "Vul hond in!") }
     
 if __name__ == "__main__":
-    uvicorn.run("main:app", port=5000, log_level="info")
+    Mangum(app=app, lifespan="on")
+    # uvicorn.run("main:app", port=5000, log_level="info")
