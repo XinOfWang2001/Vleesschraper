@@ -1,15 +1,11 @@
 # FROM python:3.12-slim
-FROM public.ecr.aws/lambda/python:3.12
+FROM python:3.12-alpine
 WORKDIR /app
 
 # Set environmental variables that are set outside of the image.
 # ENV FILES="Xin"
-ARG Hond
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-
-# 0. Echo hello world.
-RUN echo "Hello world!!" $Hond
 
 # 1. Copy requirements from the root context
 COPY requirements.txt .
@@ -22,7 +18,6 @@ COPY src/ ./src/
 # 3. Copy the data_collector application files
 COPY data_collector/ .
 
-# CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "80"]
+EXPOSE 80
 
-CMD [ "main.handler" ]
-# CMD ["python", "scraper.py"]
+CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "80"]

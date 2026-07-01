@@ -3,12 +3,21 @@ name: "vlees_schraper_proto"
 
 services:
   data_collector:
+    image: meatscraper/fastapi-serverless
+    container_name: data_collector-app
     shm_size: "1gb"
     build:
       context: .
       dockerfile: "data_collector/Dockerfile"
-    image: data-collector-app
+    env_file:
+      - .env
     environment:
-      - Hond="Honden zijn beter dan katten"
+      - Hond=${Hond}
+      - HOST=${HOST}
+      - PORT=${PORT}
+      - PASSWORD=${PASSWORD}
+      - USER_NAME=${USER_NAME}
+      - DATABASE=${DATABASE}
+      - DRIVER=${DRIVER}
     ports:
-      - "10000:80"
+      - "8000:8000"

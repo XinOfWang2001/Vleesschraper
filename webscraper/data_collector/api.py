@@ -6,13 +6,14 @@ from fastapi import FastAPI
 from sqlalchemy import URL
 from src.logic import (AlbertMenuParser, CollectionPipeline, DataLoader,
                        WebRetriever)
-from mangum import Mangum
 
 AH_URL = "https://www.ah.nl/producten/9344/vlees"
 
 load_dotenv()
 
 print(os.environ.get("Hond", "Vul hond in!"))
+print(os.environ.get("STAGE", "dev"))
+stage = os.environ.get("STAGE", "dev")
 connection_string_collect= URL.create(
     drivername=os.environ.get("DRIVER"),
     username=os.environ.get("USER_NAME"),
@@ -25,12 +26,12 @@ print(connection_string_collect)
 web = WebRetriever(AH_URL)
 albert_heijn_parser = AlbertMenuParser(web)
 data_loader = DataLoader(connection_string_collect)
-app = FastAPI()
+app = FastAPI(root_path=stage)
 
 # Solution scheduled tasks.
 
 # Data collector
-# - Lambdas --> Eerste optie
+# - Lambdas --> Eerste optie, Gefaald, kan niet via FastAPI aangeroepen worden en niet makkelijk te wisselen van implementatie.
 # - AWS ECS Tasks -> https://aws.amazon.com/ecs/?nc2=h_prod_cp_ecs&trk=ft_ec2
 # - Google Cloud Tasks
 
@@ -57,5 +58,4 @@ async def health():
     return {"status": 200, "health": os.environ.get("Hond", "Vul hond in!") }
     
 if __name__ == "__main__":
-    Mangum(app=app, lifespan="on")
-    # uvicorn.run("main:app", port=5000, log_level="info")
+    uvicorn.run("main:app", port=5000, log_level="info")

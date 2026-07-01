@@ -7,4 +7,3 @@ uvicorn
 dotenv
 beautifulsoup4
 boto3
-mangum

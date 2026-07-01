@@ -14,4 +14,6 @@ COPY src/ ./src/
 # 3. Copy the data_collector application files
 COPY data_synchronizer/ .
 
+EXPOSE 80
+
 CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "80"]
