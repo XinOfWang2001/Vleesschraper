@@ -32,7 +32,7 @@ app = FastAPI(root_path=stage)
 
 # Data collector
 # - Lambdas --> Eerste optie, Gefaald, kan niet via FastAPI aangeroepen worden en niet makkelijk te wisselen van implementatie.
-# - AWS ECS Tasks -> https://aws.amazon.com/ecs/?nc2=h_prod_cp_ecs&trk=ft_ec2
+# - AWS ECS Tasks -> https://aws.amazon.com/ecs/?nc2=h_prod_cp_ecs&trk=ft_ec2 || Onhandig opzetten. Andere manier vinden.
 # - Google Cloud Tasks
 
 # Data Synchronisizer & API

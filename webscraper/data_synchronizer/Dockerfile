@@ -14,6 +14,5 @@ COPY src/ ./src/
 # 3. Copy the data_collector application files
 COPY data_synchronizer/ .
 
-EXPOSE 80
-
-CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "80"]
+# Run job for AWS Fargate task. The job will run and exit after completion.
+CMD ["python", "api.py"]

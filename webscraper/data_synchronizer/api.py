@@ -1,23 +1,20 @@
 import os
+import sys
+import time
 
-import uvicorn
 from dotenv import load_dotenv
-from fastapi import FastAPI
 
 load_dotenv()
 
 prefix = os.environ.get("STAGE", "dev")
 
-app = FastAPI()
+def run_job():
+    print(f"Running job for {prefix} environment")
+    time.sleep(3)
+    print(f"Job completed for {prefix} environment")
+    sys.exit(0)
 
-@app.get("/")
-async def get():
-    return {"status": 200, "message": "Dummy function"}
-
-@app.get("/second")
-async def get():
-    return {"status": 200, "message": "Second Dummy function"}
 
 if __name__ == "__main__":
-    uvicorn.run("api:app", port=80, log_level="info")
+    run_job()
     
