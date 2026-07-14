@@ -1,0 +1,108 @@
+# name: Deploy webscraper to AWS ECS
+
+# on:
+#   push:
+#     branches:
+#       - main
+#   workflow_dispatch: {}
+
+# env:
+#   AWS_REGION: eu-north-1
+#   ECR_REPOSITORY: meatscraper/meat_scraper
+#   IMAGE_NAME: data_collector
+#   SERVICE_NAME: webscraper-data-collector
+#   CLUSTER_NAME: webscraper-cluster
+#   CONTAINER_NAME: data_collector-app
+#   TASK_FAMILY: webscraper-data-collector-task
+#   TASK_ROLE_ARN: ''
+#   EXECUTION_ROLE_ARN: ''
+
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+
+#       - name: Configure Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: 3.12
+
+#       - name: Install dependencies for lint/test
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r webscraper/requirements.txt
+#           pip install coverage
+
+#       - name: Run unit tests
+#         working-directory: webscraper
+#         run: |
+#           python -m unittest discover -s src/tests
+
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@v3
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: ${{ env.AWS_REGION }}
+
+#       - name: Login to Amazon ECR
+#         id: login-ecr
+#         uses: aws-actions/amazon-ecr-login@v2
+
+#       - name: Build Docker image
+#         working-directory: webscraper
+#         run: |
+#           docker build -t ${{ env.IMAGE_NAME }} -f data_collector/Dockerfile .
+#           docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+#           docker tag ${{ env.IMAGE_NAME }}:latest ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
+
+#       - name: Push Docker image to ECR
+#         run: |
+#           docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+#           docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
+
+#       - name: Create or update ECS task definition
+#         id: task-def
+#         run: |
+#           cat > task-def.json <<'EOF'
+#           {
+#             "family": "${{ env.TASK_FAMILY }}",
+#             "networkMode": "awsvpc",
+#             "executionRoleArn": "${{ env.EXECUTION_ROLE_ARN }}",
+#             "taskRoleArn": "${{ env.TASK_ROLE_ARN }}",
+#             "requiresCompatibilities": ["FARGATE"],
+#             "cpu": "512",
+#             "memory": "1024",
+#             "containerDefinitions": [
+#               {
+#                 "name": "${{ env.CONTAINER_NAME }}",
+#                 "image": "${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}",
+#                 "essential": true,
+#                 "portMappings": [{ "containerPort": 8000, "protocol": "tcp" }],
+#                 "environment": [
+#                   { "name": "STAGE", "value": "prod" }
+#                 ],
+#                 "logConfiguration": {
+#                   "logDriver": "awslogs",
+#                   "options": {
+#                     "awslogs-group": "/ecs/${{ env.SERVICE_NAME }}",
+#                     "awslogs-region": "${{ env.AWS_REGION }}",
+#                     "awslogs-stream-prefix": "ecs"
+#                   }
+#                 }
+#               }
+#             ]
+#           }
+#           EOF
+#           aws ecs register-task-definition --cli-input-json file://task-def.json
+
+#       - name: Deploy service to ECS
+#         run: |
+#           aws ecs update-service \
+#             --cluster ${{ env.CLUSTER_NAME }} \
+#             --service ${{ env.SERVICE_NAME }} \
+#             --force-new-deployment || true
+#           aws ecs wait services-stable --cluster ${{ env.CLUSTER_NAME }} --services ${{ env.SERVICE_NAME }}
