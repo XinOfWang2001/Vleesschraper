@@ -1,18 +1,14 @@
 import os
 
-import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from sqlalchemy import URL
-from src.logic import (AlbertMenuParser, CollectionPipeline, DataLoader,
-                       WebRetriever)
+from src import AlbertMenuParser, CollectionPipeline, DataLoader, WebRetriever
 
 AH_URL = "https://www.ah.nl/producten/9344/vlees"
 
 load_dotenv()
 
-print(os.environ.get("Hond", "Vul hond in!"))
-print(os.environ.get("STAGE", "dev"))
 stage = os.environ.get("STAGE", "dev")
 connection_string_collect= URL.create(
     drivername=os.environ.get("DRIVER"),
@@ -22,7 +18,7 @@ connection_string_collect= URL.create(
     port=os.environ.get("PORT"),
     database=os.environ.get("DATABASE")
 )
-print(connection_string_collect)
+
 web = WebRetriever(AH_URL)
 albert_heijn_parser = AlbertMenuParser(web)
 data_loader = DataLoader(connection_string_collect)
@@ -43,19 +39,14 @@ app = FastAPI(root_path=stage)
 # - Azure SQL-Server -> https://azure.microsoft.com/en-us/pricing/free-services#Free-service-types
 # - AWS Aurora RDS -> https://aws.amazon.com/rds/aurora/?refid=ft_ec2
 
-@app.put("/run-pipeline")
-async def run_pipeline():
+def run_pipeline():
     try:
         pipeline = CollectionPipeline(albert_heijn_parser, data_loader)
-        answer = pipeline.execute()
-        return {"status": 200, "successfull": answer}
+        pipeline.execute()
     except Exception as exc:
         exc.with_traceback()
-        return {"status": 500, "message": exc.args}
-    
-@app.get("/health")
-async def health():
-    return {"status": 200, "health": os.environ.get("Hond", "Vul hond in!") }
     
 if __name__ == "__main__":
-    uvicorn.run("main:app", port=5000, log_level="info")
+    # Will be deployed as serverless functions.
+    # Can be used within AWS ECS.
+    run_pipeline()

@@ -18,6 +18,8 @@ COPY src/ ./src/
 # 3. Copy the data_collector application files
 COPY data_collector/ .
 
-EXPOSE 80
+# EXPOSE 80
 
-CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "80"]
+# CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "80"]
+# Execute api.py script to run pipeline.
+CMD ["python", "api.py"]
