@@ -6,14 +6,13 @@ import mock
 from src.domain import WebPage, MeatProduct
 from src.logic import AlbertMenuParser, WebRetriever
 
+from .html.parse_html import get_html
+
 
 class TestParser(ut.TestCase):
 
     def test_parser(self):
-        location_html = "src/tests/html/product.html"
-        html = ""
-        with open(location_html) as file:
-            html = file.read()
+        html = get_html()
         url = "local"
         retriever = WebRetriever(url)
         retriever.scrape_site = mock.Mock(return_value=WebPage(url, 

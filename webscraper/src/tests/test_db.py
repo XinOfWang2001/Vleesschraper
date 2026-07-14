@@ -4,6 +4,7 @@ from sqlalchemy import URL, create_engine, text
 
 from src.domain import MeatProduct
 from src.logic import DataLoader
+from src.data import get_create_meat_table_query
 
 class TestDBConnection(ut.TestCase):
 
@@ -19,28 +20,8 @@ class TestDBConnection(ut.TestCase):
         self.engine = create_engine(self.connection_string_collect)
         super().__init__(methodName)
     
-    # def test_retrieval(self):
-    #     connection_string_collect= URL.create(
-    #         drivername="postgresql+psycopg2",
-    #         username="hero",
-    #         password="localpassword",
-    #         host="127.0.0.1",
-    #         port=51000,
-    #         database="hero"
-    #         )
-    #     engine = create_engine(connection_string_collect)
-        
-    #     with engine.connect() as conn:
-    #         result = conn.execute(text('SELECT * FROM Meatproduct LIMIT 50'))
-    #         rows = result.fetchall()  # Fetches all rows into a Python list
-    
-    #         # Check if the number of fetched rows matches your expectation
-    #         self.assertEqual(50, len(rows))
-    
     def test_insertion_3_new_entities(self):
-        sql = ""
-        with open("src/data/db/create_meat_table.sql") as file:
-            sql = file.read()
+        sql = get_create_meat_table_query()
         # Create tables
         with self.engine.connect() as conn:
             conn.execute(text(sql))
