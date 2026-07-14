@@ -9,3 +9,6 @@ def get_filter_existing_meat_query() -> str:
 
 def get_create_temp_table_query() -> str:
     return _read_sql_file("src/data/db/create_temp_table.sql")
+
+def get_create_meat_table_query() -> str:
+    return _read_sql_file("src/data/db/create_meat_table.sql")
