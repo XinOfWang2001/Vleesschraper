@@ -6,6 +6,16 @@ Welkom bij de **Vleesschraper** repository! Dit project is een "polyglot monorep
 
 ---
 
+## Huidige status 15/07/2026:
+
+Deployment Webscraper:
+
+We gaan weer terug naar AWS Lambdas.
+
+We stellen AWS Deployment uit.
+
+Focus eerst op applicatie development
+
 ## Project Structuur
 
 De repository is opgedeeld in twee onafhankelijke applicaties om de codebases schoon en gescheiden te houden:
