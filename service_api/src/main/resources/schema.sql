@@ -1,9 +1,12 @@
-CREATE TABLE Fact_Meat_Sales (
-    DateCode integer,
+CREATE TABLE IF NOT EXISTS "Fact_Analytics_Meatprices"   (
+    DateCode bigint,
+    Date TIMESTAMP,
+    SuperMarket varchar(100),
     Title varchar(255),
     Capitalized_Title varchar(255),
     Normal_Price float,
     Current_Price float,
     Discount int,
+    Weight int,
     PRIMARY KEY (DateCode, Capitalized_Title)
-)
+    )
