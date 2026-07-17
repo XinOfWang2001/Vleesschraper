@@ -30,7 +30,7 @@ public class MeatController {
             // Default should be per supermarkets.
             // Here validation.
             // Return the average, minimum and maximum price of meat.
-            var result = aggregatePriceService.GetAggregate();
+            MeatPriceAggregation result = aggregatePriceService.GetAggregate();
             return ResponseEntity.ok(result);
         } catch (Exception exc) {
             log.info("Request failed");
