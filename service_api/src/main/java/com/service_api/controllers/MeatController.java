@@ -1,6 +1,7 @@
 package com.service_api.controllers;
 
 import com.service_api.entities.LatestMeatPrice;
+import com.service_api.entities.MeatPriceAggregation;
 import com.service_api.services.AggregatePriceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ public class MeatController {
     - But can be 1 week to 3 years.
     * */
     @GetMapping("/meat-prices")
-    public ResponseEntity<LatestMeatPrice>  GetLatestMeatPrices(){
+    public ResponseEntity<MeatPriceAggregation>  GetLatestMeatPrices(){
         try {
             log.info("Request received");
             // Default should be per supermarkets.
