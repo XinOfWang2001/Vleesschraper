@@ -30,6 +30,22 @@ services:
       - POSTGRES_PASSWORD=local_analytics_password
     ports:
       - "52000:5432"
+  local_broker:
+    image: apache/kafka:latest
+    container_name: butcher_broker
+    ports:
+      - 29092:9092
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      # Configures the listener for your local machine on port 29092
+      KAFKA_LISTENERS: 'PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://localhost:29092'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      # KRaft cluster configuration
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+
   adminer:
     image: adminer
     ports:
