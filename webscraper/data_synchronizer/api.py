@@ -17,8 +17,6 @@ def run_job():
     # Load data into analytics database.
     time.sleep(3)
     print(f"Job completed for {prefix} environment")
-    sys.exit(0)
-
 
 if __name__ == "__main__":
     run_job()

@@ -1,7 +1,17 @@
-version: "0.2"
+version: "0.3"
 name: "vlees_schraper_proto"
 
 services:
+
+  data_synchronizer:
+    image: meatscraper/data_synchronizer
+    shm_size: "500mb"
+    build:
+      context: .
+      dockerfile: "data_synchronizer/Dockerfile"
+    env_file:
+      - .env
+  
   data_collector:
     image: meatscraper/fastapi-serverless
     container_name: data_collector-app

@@ -1,7 +1,6 @@
 import os
 
 from dotenv import load_dotenv
-from fastapi import FastAPI
 from sqlalchemy import URL
 from src import AlbertMenuParser, CollectionPipeline, DataLoader, WebRetriever
 
@@ -9,7 +8,7 @@ AH_URL = "https://www.ah.nl/producten/9344/vlees"
 
 load_dotenv()
 
-stage = os.environ.get("STAGE", "dev")
+# stage = os.environ.get("STAGE", "dev")
 connection_string_collect= URL.create(
     drivername=os.environ.get("DRIVER"),
     username=os.environ.get("USER_NAME"),
@@ -22,7 +21,7 @@ connection_string_collect= URL.create(
 web = WebRetriever(AH_URL)
 albert_heijn_parser = AlbertMenuParser(web)
 data_loader = DataLoader(connection_string_collect)
-app = FastAPI(root_path=stage)
+# app = FastAPI(root_path=stage)
 
 # Solution scheduled tasks.
 
