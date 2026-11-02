@@ -1,4 +1,4 @@
-version: "1.0"
+version: "1.1"
 
 services:
   db:
@@ -21,15 +21,15 @@ services:
     ports:
       - "51000:5432"
 
-  analytics_db:
+  meatprice_repository:
     image: "postgres"
     shm_size: "300mb"
     restart: always
     environment:
-      - POSTGRES_USER=api_hero
+      - POSTGRES_USER=meat_api
       - POSTGRES_PASSWORD=local_analytics_password
     ports:
-      - "52000:5432"
+      - "53000:5432"
   local_broker:
     image: apache/kafka:latest
     container_name: butcher_broker
